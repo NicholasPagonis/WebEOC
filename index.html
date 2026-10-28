@@ -233,11 +233,11 @@ tr:last-child>*{border-bottom:0}
   .lc-phases{display:none}
 }
 
-/* OpsAdvice example: an SMS rendered as real text (not a screenshot), so
-   it stays sharp, searchable and readable by screen readers. */
+/* OpsAdvice example: the SMS screenshot sits bare on the page, with no
+   frame, border or shadow around it. */
 @media (min-width:760px){.ops{grid-template-columns:minmax(0,1fr) minmax(0,340px);align-items:start}}
 .sms{margin:0;justify-self:center;width:100%;max-width:320px}
-.sms img{display:block;width:100%;height:auto;border-radius:22px;border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.sms img{display:block;width:100%;height:auto}
 .sms figcaption{margin-top:.7rem;text-align:center;font-size:.84rem;color:var(--ink-3)}
 
 /* Optical centring for pill labels. Text inside every pill is wrapped in

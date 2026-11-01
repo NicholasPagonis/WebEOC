@@ -108,6 +108,10 @@ main:focus{outline:none}
 @media (min-width:1400px){:root{--measure:84ch}.grid{grid-template-columns:minmax(0,1fr) 360px;gap:2.5rem}.lede{max-width:72ch}}
 @media (min-width:1800px){:root{--measure:96ch}.lede{max-width:80ch}}
 .aside{display:grid;gap:1.25rem;min-width:0}
+/* When the sticky aside scrolls, its cut-off edges fade out instead of
+   ending in a hard line. The script sets --fade-t / --fade-b only on an
+   edge that has more content beyond it, so a resting edge stays crisp. */
+@media (min-width:980px){.aside{--fade-t:0px;--fade-b:0px;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 var(--fade-t),#000 calc(100% - var(--fade-b)),transparent);mask-image:linear-gradient(to bottom,transparent,#000 var(--fade-t),#000 calc(100% - var(--fade-b)),transparent)}}
 @media (min-width:980px){.aside{position:sticky;top:calc(var(--bar-h) + env(safe-area-inset-top,0px) + 1.25rem);order:2;max-height:calc(100vh - var(--bar-h) - 2.5rem);overflow:auto;overscroll-behavior:contain;padding:0 .5rem .25rem 0;margin-right:-.5rem}}
 
 .card{background:var(--sheet);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
@@ -971,6 +975,18 @@ footer{padding-block:0 3rem}
   }
   var ticking=false;
   window.addEventListener("scroll",function(){if(!ticking){ticking=true;requestAnimationFrame(function(){spy();ticking=false})}},{passive:true});
+
+  /* Aside edge fades: see .aside in the CSS. */
+  var aside=document.querySelector(".aside");
+  function fade(){
+    var below=aside.scrollHeight-aside.clientHeight-aside.scrollTop;
+    aside.style.setProperty("--fade-t",aside.scrollTop>1?"40px":"0px");
+    aside.style.setProperty("--fade-b",below>1?"40px":"0px");
+  }
+  aside.addEventListener("scroll",fade,{passive:true});
+  window.addEventListener("resize",fade);
+  if(window.ResizeObserver)new ResizeObserver(fade).observe(aside);
+  fade();
 
   if(!route(false)){var s=null;try{s=localStorage.getItem(KEY)}catch(e){} setAudience(s&&(s==="all"||names[s])?s:"all",false)}
 
